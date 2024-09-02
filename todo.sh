@@ -98,7 +98,6 @@ case "$1" in
                 echo -n "Enter the new task description: "
                 read new_description
             
-                # Mantener el número de tarea y la prioridad, y actualizar solo la descripción
                 new_task="$task_number $priority $new_description"
                 grep -v "^$task_number " "$tasks_file" > tmpfile && echo "$new_task" >> tmpfile && mv tmpfile "$tasks_file"
                 echo "Task edited."
@@ -133,6 +132,21 @@ case "$1" in
                 echo "$colorized_task"
             fi
         done < "$tasks_file"
+        ;;
+    "listPriority")
+        echo -n "Enter priority to filter tasks (A/B/C): "
+        read priority
+        priority=${priority^^}
+
+        if [[ "$priority" == "A" || "$priority" == "B" || "$priority" == "C" ]]; then
+            echo "Tasks with priority [$priority]:"
+            grep "^\[$priority\]" "$tasks_file" | while IFS= read -r task; do
+                colorized_task=$(colorize_task "$task")
+                echo "$colorized_task"
+            done
+        else
+            echo "Invalid priority. Please enter A, B, or C."
+        fi
         ;;
     "done")
         task_number="$2"
@@ -179,6 +193,6 @@ case "$1" in
     done
     ;;
     *)
-        echo "Uso: $0 {add|delete|deleteAll|edit|search|list|listTag|done|export}"
+        echo "Uso: $0 {add|delete|deleteAll|edit|search|list|listTag|listPriority|done|export}"
         ;;
 esac
