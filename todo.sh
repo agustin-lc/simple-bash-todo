@@ -140,7 +140,7 @@ case "$1" in
 
         if [[ "$priority" == "A" || "$priority" == "B" || "$priority" == "C" ]]; then
             echo "Tasks with priority [$priority]:"
-            grep "^\[$priority\]" "$tasks_file" | while IFS= read -r task; do
+            grep "$priority" "$tasks_file" | while IFS= read -r task; do
                 colorized_task=$(colorize_task "$task")
                 echo "$colorized_task"
             done
